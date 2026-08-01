@@ -1,0 +1,4 @@
+customtkinter==6.0.0
+lxml==6.1.1
+xhtml2pdf==0.2.17
+playwright==1.62.0

@@ -1,0 +1,31 @@
+# Entorno virtual
+venv/
+
+# Byte-compilado / cache de Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Tests
+.pytest_cache/
+htmlcov/
+.coverage
+
+# Logs de la aplicación
+logs/
+*.log
+
+# Salidas de prueba
+test_output/
+
+# Carpetas personales de ejemplos (uso privado del autor, nunca versionar)
+example/
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDEs
+.idea/
+.vscode/
