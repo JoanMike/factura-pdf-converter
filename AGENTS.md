@@ -72,7 +72,7 @@ venv\Scripts\python -c "from src.converter import FacturaConverter; c=FacturaCon
 - **`example/` folders are personal-use and must ALWAYS be in `.gitignore`** (standing rule from the author, applies to every project).
 - Also gitignored: `venv/`, `__pycache__/`, `logs/`, `test_output/`.
 - Dependencies are pinned in `requirements.txt`; only direct deps are declared (Pillow/pypdf/packaging come in transitively via customtkinter/xhtml2pdf).
-- License: MIT (`LICENSE`).
+- License: PolyForm Noncommercial 1.0.0 (`LICENSE`), copyright Jose Miguel Maldonado Garcia.
 
 ## Gotchas
 
