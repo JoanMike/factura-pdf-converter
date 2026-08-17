@@ -1,244 +1,199 @@
-# Factura XML a PDF Converter
+# Factura PDF Converter
 
-Aplicación de escritorio moderna para convertir facturas electrónicas SUNAT de formato XML a PDF.
+![License](https://img.shields.io/badge/license-PolyForm%20NC%201.0.0-blue)
+![Python](https://img.shields.io/badge/python-3.10%2B-blue?logo=python&logoColor=white)
+![Platform](https://img.shields.io/badge/platform-Windows-0078D6?logo=windows&logoColor=white)
+![GUI](https://img.shields.io/badge/GUI-CustomTkinter-2C8EBB)
 
-## Características
+> Windows desktop app that converts SUNAT electronic invoices and credit notes (XML UBL 2.1) to PDF, using XSLT transformation and Chromium rendering.
 
-- ✅ Interfaz gráfica moderna y intuitiva con CustomTkinter
-- ✅ Conversión de archivos XML individuales o en lote
-- ✅ Soporte para facturas y notas de crédito SUNAT UBL 2.1 de **todas las series** (E, F, FF, etc.)
-- ⚠️ Detección de boletas de venta: se omiten con advertencia (no soportadas por ahora)
-- ✅ Selección de directorio de salida personalizado
-- ✅ Barra de progreso en tiempo real
-- ✅ Manejo de errores amigable
-- ✅ Compatible con Windows 10/11
-- ✅ Renderizado PDF con Chromium (resultado más fiel al navegador)
-- ✅ Recuperación automática para XML con errores leves de sintaxis
-- ✅ Sección "Información de la detracción" generada desde el XML
-- ✅ Catálogo 54 SUNAT de detracción mapeado (códigos vigentes)
-- ✅ Registro de actividad en `logs/factura_converter.log` para diagnóstico
+## Overview
 
-## Requisitos
+A modern desktop application to convert SUNAT electronic invoices from XML (UBL 2.1) to PDF. It renders the documents through the official SUNAT XSL/CSS templates and prints them to PDF with a Chromium engine for a result that closely matches the browser. Invoices of any series (E, F, FF, ...) and credit notes are supported; boletas de venta (`InvoiceTypeCode = 03`) are detected and skipped with a warning.
 
-- Windows 10/11
-- Python 3.10 o superior (probado con Python 3.14)
+## Features
 
-## Instalación Rápida
+- **Modern, intuitive GUI** built with CustomTkinter.
+- **Single-file or batch conversion** of XML documents.
+- Supports SUNAT UBL 2.1 **invoices and credit notes of all series** (E, F, FF, etc.).
+- **Boleta de venta detection**: skipped with a warning at the end of the run (not supported yet).
+- **Custom output directory** selection.
+- **Real-time progress bar** and friendly error handling.
+- **Chromium-based PDF rendering** for browser-faithful output, with `xhtml2pdf` as fallback.
+- **Automatic recovery** for XML files with minor syntax errors.
+- **"Información de la detracción" section** generated from the XML (legend, good/service code and description, payment method, bank account, percentage, amount).
+- **SUNAT Catalog 54** mapping for detraction types (current codes) in the XSL template.
+- **Activity log** written to `logs/factura_converter.log` for diagnostics.
 
-### Opción 1: Script de instalación automática (Recomendado)
+## Tech Stack
 
-1. Abre una terminal (cmd) en la carpeta del proyecto
-2. Ejecuta el instalador:
+- **Python 3.10+** (developed on 3.14) with `customtkinter`, `lxml`, `xhtml2pdf` and `playwright` (Chromium).
+- XSLT transformation with the official SUNAT templates (`templates/`).
+- Tests with `pytest`.
+
+## Requirements
+
+- Windows 10/11.
+- Python 3.10 or higher.
+- Chromium (downloaded automatically by `install.bat` via Playwright).
+
+## Installation
+
+### Option 1: Automatic installer (recommended)
+
+1. Open a terminal (cmd) in the project folder.
+2. Run the installer:
    ```batch
    install.bat
    ```
-3. Espera a que se complete la instalación
-4. Ejecuta la aplicación:
+3. Wait for the installation to finish, then run the app:
    ```batch
    run.bat
    ```
 
-### Opción 2: Instalación manual
+### Option 2: Manual installation
 
-1. Crea un entorno virtual:
+1. Create a virtual environment:
    ```bash
    python -m venv venv
    ```
-
-2. Activa el entorno virtual:
+2. Activate it:
    ```bash
    venv\Scripts\activate
    ```
-
-3. Instala las dependencias:
+3. Install the dependencies:
    ```bash
    pip install -r requirements.txt
    ```
-
-4. Instala Chromium para el motor de PDF:
+4. Install Chromium for the PDF engine:
    ```bash
    python -m playwright install chromium
    ```
-
-5. Ejecuta la aplicación:
+5. Run the app:
    ```bash
    python run.py
    ```
 
-## Uso
+## Usage
 
-### Ejecutar la aplicación
-
-Después de la instalación, simplemente haz doble clic en **`run.bat`** o ejecuta:
-
-```bash
-run.bat
-```
-
-También puedes ejecutar directamente con Python desde la raíz del proyecto:
+After installation, just double-click **`run.bat`** (recommended — it sets the correct working directory), or run from the project root:
 
 ```bash
 venv\Scripts\python run.py
 ```
 
-### Instrucciones de uso
+1. **Select XML files**:
+   - Click "Seleccionar un archivo" to convert a single file.
+   - Click "Seleccionar varios archivos" to convert multiple files.
+2. **Choose an output directory** (optional):
+   - By default, PDFs are saved next to their source XML files.
+   - Click "Cambiar" to pick another directory.
+3. **Convert**:
+   - Click "Convertir a PDF" and wait for the conversion to finish.
 
-1. **Seleccionar archivos XML**:
-   - Haz clic en "📁 Seleccionar un archivo" para convertir un solo archivo
-   - Haz clic en "📂 Seleccionar varios archivos" para convertir múltiples archivos
+> **Note:** Invoices of any series and credit notes are converted. If a **boleta de venta** slips into the selection, it is NOT converted: it is skipped and listed in a warning at the end. A damaged or unreadable XML is reported as an **error** (not as skipped) and logged in `logs/factura_converter.log`.
 
-2. **Elegir directorio de salida** (opcional):
-   - Por defecto, los PDFs se guardan en la misma ubicación que los XML
-   - Haz clic en "Cambiar" para seleccionar otro directorio
+### Quick console test (no GUI)
 
-3. **Convertir**:
-   - Haz clic en "🚀 Convertir a PDF"
-   - Espera a que se complete la conversión
-   - Los archivos PDF se generarán automáticamente
-
-> **Nota:** Se convierten facturas de cualquier serie (E, F, FF, etc.) y notas de crédito.
-> Si entre los archivos se cuela una **boleta de venta**, NO se convierte: se omite y se
-> muestra una advertencia al final del proceso con el nombre del archivo. Si un XML está
-> dañado o no se puede leer, se reporta como **error** (no como omitido) y queda registrado
-> en el log.
-
-### Prueba rápida en consola (sin interfaz)
-
-Para validar que el motor de conversión está funcionando:
+To validate that the conversion engine works:
 
 ```bash
 venv\Scripts\python -c "from src.converter import FacturaConverter; c=FacturaConverter(); print(c.convert('example/Factura/FACTURAE001-34420612069388.XML', 'test_output/prueba_manual.pdf'))"
 ```
 
-## Pruebas automatizadas
+### Automated tests
 
-El proyecto incluye pruebas con `pytest` sobre la lógica de conversión:
+The project includes a `pytest` suite covering the conversion logic:
 
 ```bash
 venv\Scripts\pip install -r requirements-dev.txt
 venv\Scripts\python -m pytest tests/ -v
 ```
 
-## Novedades Recientes
-
-- Se eliminó la restricción de Serie E: ahora se convierten facturas de cualquier serie y notas de crédito.
-- Las boletas de venta (`InvoiceTypeCode = 03`) se detectan y se omiten con advertencia (su soporte se evaluará más adelante).
-- Un XML corrupto ahora se reporta como error, nunca como "omitido".
-- Las conversiones en lote reutilizan una sola instancia de Chromium (más rápidas).
-- Los errores de conversión quedan registrados en `logs/factura_converter.log`.
-- Se mejoró la compatibilidad entre series y proveedores con variaciones de estructura XML.
-- Se corrigió el cálculo de "Sub total Ventas" para evitar valores `NaN` cuando faltan nodos opcionales.
-- Se corrigió el cálculo de "Monto neto pendiente de pago" para escenarios con detracción + crédito.
-- Se añadió la sección final "Información de la detracción" con:
-   - leyenda,
-   - código y descripción del bien/servicio,
-   - medio de pago,
-   - cuenta bancaria,
-   - porcentaje,
-   - monto de detracción.
-- Se implementó el mapeo del Catálogo 54 (tipos de bienes y servicios sujetos al SPOT) en la plantilla XSL.
-- Se añadió modo de recuperación para XML mal formado leve, evitando fallas en casos recuperables.
-
-## Estructura del proyecto
+## Project Structure
 
 ```
 factura_pdf_converter/
-├── venv/                   # Entorno virtual Python (no versionado)
 ├── src/
-│   ├── __init__.py
-│   ├── converter.py        # Lógica de conversión XML → PDF
-│   └── main.py             # Interfaz gráfica
+│   ├── converter.py        # XML → XSLT → HTML → PDF conversion logic
+│   └── main.py             # GUI (CustomTkinter), threading, logging
 ├── templates/
-│   ├── factura2.1.xsl      # Plantilla XSLT para facturas
-│   ├── ebxml21.css         # Estilos CSS para facturas
-│   ├── nota_credito.xsl    # Plantilla XSLT para notas de crédito
-│   └── nota_credito.css    # Estilos CSS para notas de crédito
-├── tests/                  # Pruebas automatizadas (pytest)
-├── logs/                   # Logs de la aplicación (se genera en ejecución, no versionado)
-├── example/                # Ejemplos de uso personal (no versionado)
-├── test_output/            # Salidas de prueba (no versionado)
-├── run.py                  # Script de inicio
-├── run.bat                 # Script de inicio Windows
-├── install.bat             # Script de instalación Windows
-├── requirements.txt        # Dependencias Python
-├── requirements-dev.txt    # Dependencias de desarrollo (tests)
-├── .gitignore
-├── LICENSE                 # Licencia MIT
-└── README.md               # Este archivo
+│   ├── factura2.1.xsl      # XSLT template for invoices
+│   ├── ebxml21.css         # Invoice styles
+│   ├── nota_credito.xsl    # XSLT template for credit notes
+│   └── nota_credito.css    # Credit note styles
+├── tests/                  # Automated tests (pytest)
+├── logs/                   # Application logs (created at runtime, not versioned)
+├── example/                # Personal example files (not versioned)
+├── test_output/            # Test outputs (not versioned)
+├── run.py                  # Startup script
+├── run.bat                 # Windows startup script
+├── install.bat             # Windows installer script
+├── requirements.txt        # Python dependencies
+├── requirements-dev.txt    # Development dependencies (tests)
+└── README.md
 ```
 
-## Dependencias principales
+## Troubleshooting
 
-- **customtkinter**: Interfaz gráfica moderna
-- **lxml**: Procesamiento XML y XSLT
-- **xhtml2pdf**: Generación de PDF desde HTML (motor alternativo)
-- **playwright**: Impresión a PDF usando Chromium (más fiel al navegador)
+### "XSL template not found" error
 
-> Pillow, pypdf y packaging se instalan automáticamente como dependencias transitivas de
-> customtkinter y xhtml2pdf; no es necesario declararlas.
+Make sure `factura2.1.xsl`, `nota_credito.xsl` and their CSS files are in the `templates/` folder.
 
-## Solución de problemas
+### Conversion error
 
-### Error "No se encontró la plantilla XSL"
+Verify that the XML is a valid SUNAT invoice in UBL 2.1 format. Files with minor syntax errors are recovered automatically; heavily damaged or incomplete files fail and are reported as errors (with details in `logs/factura_converter.log`).
 
-Asegúrate de que los archivos `factura2.1.xsl`, `nota_credito.xsl` y sus CSS estén en la carpeta `templates/`.
+### Detraction code without description
 
-### Error al convertir
+The app maps the current SUNAT Catalog 54. If an XML contains a new code not covered by the template, it is shown as unmapped and the template must be updated.
 
-Verifica que el archivo XML sea una factura SUNAT válida en formato UBL 2.1.
+### Missing Chromium
 
-Si el XML tiene errores de sintaxis leves, el sistema intentará recuperarlo automáticamente.
-Si el archivo está muy dañado o incompleto, la conversión sí puede fallar y el archivo se
-reportará como error (con detalle en `logs/factura_converter.log`).
+The default engine is Chromium; install/reinstall it with:
 
-### Código de detracción sin descripción
-
-El aplicativo incluye mapeo del Catálogo 54 vigente. Si en algún XML aparece un código nuevo/no contemplado por SUNAT en la plantilla actual, se mostrará como no mapeado y será necesario actualizar la plantilla.
-
-### Diferencias de formato entre navegador y PDF
-
-La aplicación usa por defecto un motor de navegador (Chromium) para generar el PDF y acercarse al resultado visual del navegador.
-
-Si falta Chromium, instala/reinstala:
 ```bash
 venv\Scripts\python -m playwright install chromium
 ```
 
-### La aplicación no inicia
+### The app does not start / "No module named 'src'"
 
-1. Verifica que el entorno virtual esté creado correctamente
-2. Si el entorno quedó creado con otra versión de Python (ej. desinstalaste o actualizaste Python),
-   bórralo y recréalo:
-   ```bash
-   rmdir /s /q venv
-   install.bat
-   ```
-3. Reinstala las dependencias:
-   ```bash
-   venv\Scripts\pip install -r requirements.txt
-   ```
+- Always run from the project folder (or use `run.bat`, which handles it automatically).
+- If the venv was created with another Python version (e.g. after upgrading Python), delete it and recreate it:
+  ```bash
+  rmdir /s /q venv
+  install.bat
+  ```
 
-### Error "No module named 'src'"
+## Notes
 
-Asegúrate de ejecutar la aplicación desde la carpeta del proyecto (`factura_pdf_converter`):
-```bash
-cd ruta\a\factura_pdf_converter
-python run.py
-```
+- The app uses the XSL and CSS templates provided by SUNAT to keep the official invoice format.
+- Compatible with electronic invoices and credit notes of any series. Boletas de venta are not converted (skipped with a warning).
+- The default PDF engine is `auto`: it tries Chromium first and falls back to `xhtml2pdf` if Chromium is unavailable.
+- Pillow, pypdf and packaging are installed automatically as transitive dependencies of customtkinter and xhtml2pdf.
+- The `example/` folder is for personal use and excluded from version control.
 
-Alternativamente, usa `run.bat`, que ya fija la carpeta correcta automáticamente.
+## Changelog
 
-## Notas
+- Removed the Series E restriction: invoices of any series and credit notes are now converted.
+- Boletas de venta (`InvoiceTypeCode = 03`) are detected and skipped with a warning.
+- Corrupt XML is now reported as an error, never as "skipped".
+- Batch conversions reuse a single Chromium instance (faster).
+- Conversion errors are logged to `logs/factura_converter.log`.
+- Improved compatibility across series and providers with XML structure variations.
+- Fixed "Sub total Ventas" calculation to avoid `NaN` when optional nodes are missing.
+- Fixed "Monto neto pendiente de pago" calculation for detraction + credit scenarios.
+- Added the "Información de la detracción" section (legend, good/service code and description, payment method, bank account, percentage, detraction amount).
+- Mapped Catalog 54 (goods/services subject to SPOT) in the XSL template.
+- Added recovery mode for mildly malformed XML.
 
-- La aplicación utiliza las plantillas XSL y CSS proporcionadas por SUNAT para mantener el formato oficial de las facturas.
-- Compatible con facturas y notas de crédito electrónicas de cualquier serie. Las boletas de venta no se convierten (se omiten con advertencia).
-- El motor por defecto es `auto`: intenta primero `browser` (Chromium) y usa `xhtml2pdf` como fallback si Chromium no está disponible.
-- La carpeta `example/` es de uso personal y está excluida del control de versiones (`.gitignore`).
+## License
 
-## Licencia
+Distributed under the **PolyForm Noncommercial License 1.0.0** — free for
+noncommercial use only. See [LICENSE](LICENSE) for the full license text.
 
-Distribuido bajo licencia MIT. Ver archivo [LICENSE](LICENSE).
+Copyright (c) 2026 Jose Miguel Maldonado Garcia
 
-## Autor
+## Author
 
-Desarrollado por Jose Miguel Maldonado Garcia para facilitar la gestión de facturas electrónicas SUNAT.
+**Jose Miguel Maldonado Garcia** — [@JoanMike](https://github.com/JoanMike)
