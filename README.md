@@ -7,6 +7,10 @@
 
 > Windows desktop app that converts SUNAT electronic invoices and credit notes (XML UBL 2.1) to PDF, using XSLT transformation and Chromium rendering.
 
+## Screenshot
+
+![Factura PDF Converter](img/factura_pdf_converter.png)
+
 ## Overview
 
 A modern desktop application to convert SUNAT electronic invoices from XML (UBL 2.1) to PDF. It renders the documents through the official SUNAT XSL/CSS templates and prints them to PDF with a Chromium engine for a result that closely matches the browser. Invoices of any series (E, F, FF, ...) and credit notes are supported; boletas de venta (`InvoiceTypeCode = 03`) are detected and skipped with a warning.
