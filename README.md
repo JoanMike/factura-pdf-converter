@@ -9,7 +9,9 @@
 
 ## Screenshot
 
-![Factura PDF Converter](img/factura_pdf_converter.png)
+<p align="center">
+  <img src="img/factura_pdf_converter.png" alt="Factura PDF Converter">
+</p>
 
 ## Overview
 
